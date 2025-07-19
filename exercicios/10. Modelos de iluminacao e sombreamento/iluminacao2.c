@@ -134,7 +134,10 @@ void motion(int x, int y) {
     int dy = y - last_y;
     int mods = glutGetModifiers();
 
-    if (mods & GLUT_ACTIVE_SHIFT) {
+    // Ajusta a posição da luz ou a cor do material
+    // se a tecla Shift estiver pressionada, ajusta a luz ambiente
+    // caso contrário, ajusta a cor do material B
+    if (mods && GLUT_ACTIVE_SHIFT) {
         for (int i = 0; i < 3; i++) {
             cor_luz0_amb[i] += dy * 0.01f;
             if (cor_luz0_amb[i] > 1.0f) cor_luz0_amb[i] = 1.0f;
@@ -142,8 +145,11 @@ void motion(int x, int y) {
         }
         glLightfv(GL_LIGHT0, GL_AMBIENT, cor_luz0_amb);
         glEnable(GL_LIGHT0); // força reativação da luz ambiente
+        
+        
     } else {
-        mat_b_difusa[3] += dx * 0.01f;
+        float delta = dx + dy;
+        mat_b_difusa[3] += delta * 0.01f;
         mat_b_especular[3] = mat_b_difusa[3];
         if (mat_b_difusa[3] > 1.0f) mat_b_difusa[3] = 1.0f;
         if (mat_b_difusa[3] < 0.0f) mat_b_difusa[3] = 0.0f;

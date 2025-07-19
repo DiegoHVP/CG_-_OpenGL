@@ -518,7 +518,8 @@ pre.pygments .tok-il { color: #666 } /* Literal.Number.Integer.Long */
 <ul class="sectlevel1">
 <li><a href="#_atividades_e_respostas">1. Atividades e Respostas</a>
 <ul class="sectlevel2">
-<li><a href="#_atividade_iluminacao2_c">1.1. Atividade: iluminacao2.c</a></li>
+<li><a href="#_atividade_1_superjato_c">1.1. Atividade 1: superjato.c</a></li>
+<li><a href="#_atividade_2_logotipo_com_textura_rgb">1.2. Atividade 2: Logotipo com textura RGB</a></li>
 </ul>
 </li>
 <li><a href="#_bibliografia">2. Bibliografia</a></li>
@@ -530,101 +531,79 @@ pre.pygments .tok-il { color: #666 } /* Literal.Number.Integer.Long */
 <h2 id="_atividades_e_respostas">1. Atividades e Respostas</h2>
 <div class="sectionbody">
 <div class="sect2">
-<h3 id="_atividade_iluminacao2_c">1.1. Atividade: iluminacao2.c</h3>
+<h3 id="_atividade_1_superjato_c">1.1. Atividade 1: superjato.c</h3>
 <div class="paragraph">
-<p>Utilizando o programa <code>iluminacao.c</code> como referência, implementou-se <code>iluminacao2.c</code> com as seguintes modificações:</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>Quando o mouse é movido <strong>sem nenhuma tecla</strong>, a transparência do objeto B muda conforme o deslocamento horizontal.</p>
-</li>
-<li>
-<p>Quando o mouse é movido <strong>com a tecla SHIFT pressionada</strong>, a intensidade da iluminação ambiente da luz 0 é alterada.</p>
-</li>
-</ul>
+<p>Utilizando o programa exemplos/jato.c como referência, implemente um programa superjato.c. Caso você ainda não tenha notado, o avião a jato deste exemplo não possui uma turbina. Faça-o mais interessante, projetando essa turbina e acoplando-a à parte traseira do jato no seu novo programa. O modelo da turbina fica a seu gosto. Acrescente também dois mísseis sob as asas.</p>
 </div>
 <div class="sect3">
 <h4 id="_resposta">1.1.1. Resposta</h4>
 <div class="paragraph">
-<p>Referência: arquivo <code>iluminacao2.c</code></p>
+<p>No codigo apenas adicionei as funções de desenharTurbina e denhaMissil e chamei na função de compoe_jato.</p>
 </div>
-<div class="ulist">
-<ul>
-<li>
-<p>Adicionadas variáveis globais <code>last_x</code>, <code>last_y</code> e <code>shift_pressed</code> para rastrear o movimento e o estado da tecla SHIFT. (<code>tag::variaveis_mouse[]</code>)</p>
-</li>
-<li>
-<p>Criadas funções <code>motion()</code>, <code>keyboardDown()</code>, <code>keyboardUp()</code> para lidar com entrada de mouse e teclado. (<code>tag::teclado_mouse[]</code>)</p>
-</li>
-<li>
-<p>A transparência do objeto B (última esfera) é controlada por <code>mat_b_difusa[3]</code>.</p>
-</li>
-<li>
-<p>A iluminação ambiente é controlada por <code>cor_luz0_amb[]</code>, que é atualizada dinamicamente.</p>
-</li>
-<li>
-<p>As funções de callback foram registradas com o GLUT no <code>main()</code> (<code>tag::main_hook[]</code>).</p>
-</li>
-</ul>
-</div>
-<div id="listagem_iluminacao2" class="listingblock">
-<div class="title">Listagem 1. iluminacao2.c</div>
+<div id="listagem_superjato" class="listingblock">
+<div class="title">Listagem 1. superjato.c</div>
 <div class="content">
-<pre class="pygments highlight"><code data-lang="c"><span></span><span class="tok-kt">int</span><span class="tok-w"> </span><span class="tok-n">last_x</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-mi">-1</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-n">last_y</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-mi">-1</span><span class="tok-p">;</span>
-<span class="tok-kt">int</span><span class="tok-w"> </span><span class="tok-n">shift_pressed</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-mi">0</span><span class="tok-p">;</span>
-<span class="tok-kt">void</span><span class="tok-w"> </span><span class="tok-nf">keyboardDown</span><span class="tok-p">(</span><span class="tok-kt">unsigned</span><span class="tok-w"> </span><span class="tok-kt">char</span><span class="tok-w"> </span><span class="tok-n">key</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-kt">int</span><span class="tok-w"> </span><span class="tok-n">x</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-kt">int</span><span class="tok-w"> </span><span class="tok-n">y</span><span class="tok-p">)</span><span class="tok-w"> </span><span class="tok-p">{</span>
-<span class="tok-w">    </span><span class="tok-c1">// 16 e tecla Shift</span>
-<span class="tok-w">    </span><span class="tok-k">if</span><span class="tok-w"> </span><span class="tok-p">(</span><span class="tok-n">key</span><span class="tok-w"> </span><span class="tok-o">==</span><span class="tok-w"> </span><span class="tok-mi">16</span><span class="tok-p">)</span><span class="tok-w"> </span><span class="tok-n">shift_pressed</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-mi">1</span><span class="tok-p">;</span>
-<span class="tok-w">    </span><span class="tok-c1">// 27 e a tecla ESC</span>
-<span class="tok-w">    </span><span class="tok-k">if</span><span class="tok-w"> </span><span class="tok-p">(</span><span class="tok-n">key</span><span class="tok-w"> </span><span class="tok-o">==</span><span class="tok-w"> </span><span class="tok-mi">27</span><span class="tok-p">)</span><span class="tok-w"> </span><span class="tok-n">exit</span><span class="tok-p">(</span><span class="tok-mi">0</span><span class="tok-p">);</span>
-<span class="tok-w">    </span><span class="tok-k">if</span><span class="tok-w"> </span><span class="tok-p">(</span><span class="tok-n">key</span><span class="tok-w"> </span><span class="tok-o">==</span><span class="tok-w"> </span><span class="tok-sc">&#39;g&#39;</span><span class="tok-p">)</span><span class="tok-w"> </span><span class="tok-n">gouraud</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-o">!</span><span class="tok-n">gouraud</span><span class="tok-p">;</span>
-<span class="tok-w">    </span><span class="tok-k">if</span><span class="tok-w"> </span><span class="tok-p">(</span><span class="tok-n">key</span><span class="tok-w"> </span><span class="tok-o">==</span><span class="tok-w"> </span><span class="tok-sc">&#39;r&#39;</span><span class="tok-p">)</span><span class="tok-w"> </span><span class="tok-n">raioxz</span><span class="tok-o">++</span><span class="tok-p">;</span>
-<span class="tok-w">    </span><span class="tok-k">if</span><span class="tok-w"> </span><span class="tok-p">(</span><span class="tok-n">key</span><span class="tok-w"> </span><span class="tok-o">==</span><span class="tok-w"> </span><span class="tok-sc">&#39;R&#39;</span><span class="tok-w"> </span><span class="tok-o">&amp;&amp;</span><span class="tok-w"> </span><span class="tok-n">raioxz</span><span class="tok-w"> </span><span class="tok-o">&gt;</span><span class="tok-w"> </span><span class="tok-mi">1</span><span class="tok-p">)</span><span class="tok-w"> </span><span class="tok-n">raioxz</span><span class="tok-o">--</span><span class="tok-p">;</span>
-<span class="tok-w">    </span><span class="tok-n">glutPostRedisplay</span><span class="tok-p">();</span>
+<pre class="pygments highlight"><code data-lang="c"><span></span><span class="tok-kt">void</span><span class="tok-w"> </span><span class="tok-nf">desenhaTurbina</span><span class="tok-p">()</span><span class="tok-w"> </span><span class="tok-p">{</span>
+<span class="tok-w">    </span><span class="tok-n">glPushMatrix</span><span class="tok-p">();</span>
+<span class="tok-w">    </span><span class="tok-n">glColor3f</span><span class="tok-p">(</span><span class="tok-mf">0.3</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-mf">0.3</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-mf">0.3</span><span class="tok-p">);</span>
+<span class="tok-w">    </span>
+<span class="tok-w">    </span><span class="tok-n">glTranslatef</span><span class="tok-p">(</span><span class="tok-mf">0.0</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-mf">-0.3</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-mf">-3.6</span><span class="tok-p">);</span>
+<span class="tok-w">    </span><span class="tok-n">glutSolidTorus</span><span class="tok-p">(</span><span class="tok-mf">0.1</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-mf">0.3</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-mi">12</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-mi">24</span><span class="tok-p">);</span>
+<span class="tok-w">    </span><span class="tok-n">glPopMatrix</span><span class="tok-p">();</span>
 <span class="tok-p">}</span>
 
-<span class="tok-kt">void</span><span class="tok-w"> </span><span class="tok-nf">keyboardUp</span><span class="tok-p">(</span><span class="tok-kt">unsigned</span><span class="tok-w"> </span><span class="tok-kt">char</span><span class="tok-w"> </span><span class="tok-n">key</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-kt">int</span><span class="tok-w"> </span><span class="tok-n">x</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-kt">int</span><span class="tok-w"> </span><span class="tok-n">y</span><span class="tok-p">)</span><span class="tok-w"> </span><span class="tok-p">{</span>
-<span class="tok-w">    </span><span class="tok-c1">// 16 e tecla Shift</span>
-<span class="tok-w">    </span><span class="tok-k">if</span><span class="tok-w"> </span><span class="tok-p">(</span><span class="tok-n">key</span><span class="tok-w"> </span><span class="tok-o">==</span><span class="tok-w"> </span><span class="tok-mi">16</span><span class="tok-p">)</span><span class="tok-w"> </span><span class="tok-n">shift_pressed</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-mi">0</span><span class="tok-p">;</span>
-<span class="tok-p">}</span>
+<span class="tok-kt">void</span><span class="tok-w"> </span><span class="tok-nf">desenhaMissil</span><span class="tok-p">(</span><span class="tok-kt">float</span><span class="tok-w"> </span><span class="tok-n">x</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-kt">float</span><span class="tok-w"> </span><span class="tok-n">y</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-kt">float</span><span class="tok-w"> </span><span class="tok-n">z</span><span class="tok-p">)</span><span class="tok-w"> </span><span class="tok-p">{</span>
+<span class="tok-w">    </span><span class="tok-n">GLUquadric</span><span class="tok-o">*</span><span class="tok-w"> </span><span class="tok-n">quad</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-n">gluNewQuadric</span><span class="tok-p">();</span>
+<span class="tok-w">    </span><span class="tok-n">glPushMatrix</span><span class="tok-p">();</span>
+<span class="tok-w">    </span><span class="tok-n">glColor3f</span><span class="tok-p">(</span><span class="tok-mf">0.7</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-mf">0.7</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-mf">0.7</span><span class="tok-p">);</span>
+<span class="tok-w">    </span><span class="tok-n">glTranslatef</span><span class="tok-p">(</span><span class="tok-n">x</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-n">y</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-n">z</span><span class="tok-p">);</span>
+<span class="tok-w">    </span><span class="tok-n">glRotatef</span><span class="tok-p">(</span><span class="tok-mi">0</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-mi">1</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-mi">0</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-mi">0</span><span class="tok-p">);</span>
+<span class="tok-w">    </span><span class="tok-n">glScalef</span><span class="tok-p">(</span><span class="tok-mf">1.2</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-mf">1.2</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-mf">1.2</span><span class="tok-p">);</span>
 
-<span class="tok-kt">void</span><span class="tok-w"> </span><span class="tok-nf">motion</span><span class="tok-p">(</span><span class="tok-kt">int</span><span class="tok-w"> </span><span class="tok-n">x</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-kt">int</span><span class="tok-w"> </span><span class="tok-n">y</span><span class="tok-p">)</span><span class="tok-w"> </span><span class="tok-p">{</span>
-<span class="tok-w">    </span><span class="tok-k">if</span><span class="tok-w"> </span><span class="tok-p">(</span><span class="tok-n">last_x</span><span class="tok-w"> </span><span class="tok-o">&lt;</span><span class="tok-w"> </span><span class="tok-mi">0</span><span class="tok-w"> </span><span class="tok-o">||</span><span class="tok-w"> </span><span class="tok-n">last_y</span><span class="tok-w"> </span><span class="tok-o">&lt;</span><span class="tok-w"> </span><span class="tok-mi">0</span><span class="tok-p">)</span><span class="tok-w"> </span><span class="tok-p">{</span>
-<span class="tok-w">        </span><span class="tok-n">last_x</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-n">x</span><span class="tok-p">;</span><span class="tok-w"> </span><span class="tok-n">last_y</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-n">y</span><span class="tok-p">;</span>
-<span class="tok-w">        </span><span class="tok-k">return</span><span class="tok-p">;</span>
-<span class="tok-w">    </span><span class="tok-p">}</span>
-<span class="tok-w">    </span><span class="tok-kt">int</span><span class="tok-w"> </span><span class="tok-n">dx</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-n">x</span><span class="tok-w"> </span><span class="tok-o">-</span><span class="tok-w"> </span><span class="tok-n">last_x</span><span class="tok-p">;</span>
-<span class="tok-w">    </span><span class="tok-kt">int</span><span class="tok-w"> </span><span class="tok-n">dy</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-n">y</span><span class="tok-w"> </span><span class="tok-o">-</span><span class="tok-w"> </span><span class="tok-n">last_y</span><span class="tok-p">;</span>
-
-<span class="tok-w">    </span><span class="tok-k">if</span><span class="tok-w"> </span><span class="tok-p">(</span><span class="tok-n">shift_pressed</span><span class="tok-p">)</span><span class="tok-w"> </span><span class="tok-p">{</span>
-<span class="tok-w">        </span><span class="tok-k">for</span><span class="tok-w"> </span><span class="tok-p">(</span><span class="tok-kt">int</span><span class="tok-w"> </span><span class="tok-n">i</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-mi">0</span><span class="tok-p">;</span><span class="tok-w"> </span><span class="tok-n">i</span><span class="tok-w"> </span><span class="tok-o">&lt;</span><span class="tok-w"> </span><span class="tok-mi">3</span><span class="tok-p">;</span><span class="tok-w"> </span><span class="tok-n">i</span><span class="tok-o">++</span><span class="tok-p">)</span><span class="tok-w"> </span><span class="tok-p">{</span>
-<span class="tok-w">            </span><span class="tok-n">cor_luz0_amb</span><span class="tok-p">[</span><span class="tok-n">i</span><span class="tok-p">]</span><span class="tok-w"> </span><span class="tok-o">+=</span><span class="tok-w"> </span><span class="tok-n">dy</span><span class="tok-w"> </span><span class="tok-o">*</span><span class="tok-w"> </span><span class="tok-mf">0.01f</span><span class="tok-p">;</span>
-<span class="tok-w">            </span><span class="tok-k">if</span><span class="tok-w"> </span><span class="tok-p">(</span><span class="tok-n">cor_luz0_amb</span><span class="tok-p">[</span><span class="tok-n">i</span><span class="tok-p">]</span><span class="tok-w"> </span><span class="tok-o">&gt;</span><span class="tok-w"> </span><span class="tok-mf">1.0f</span><span class="tok-p">)</span><span class="tok-w"> </span><span class="tok-n">cor_luz0_amb</span><span class="tok-p">[</span><span class="tok-n">i</span><span class="tok-p">]</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-mf">1.0f</span><span class="tok-p">;</span>
-<span class="tok-w">            </span><span class="tok-k">if</span><span class="tok-w"> </span><span class="tok-p">(</span><span class="tok-n">cor_luz0_amb</span><span class="tok-p">[</span><span class="tok-n">i</span><span class="tok-p">]</span><span class="tok-w"> </span><span class="tok-o">&lt;</span><span class="tok-w"> </span><span class="tok-mf">0.0f</span><span class="tok-p">)</span><span class="tok-w"> </span><span class="tok-n">cor_luz0_amb</span><span class="tok-p">[</span><span class="tok-n">i</span><span class="tok-p">]</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-mf">0.0f</span><span class="tok-p">;</span>
-<span class="tok-w">        </span><span class="tok-p">}</span>
-<span class="tok-w">        </span><span class="tok-n">glLightfv</span><span class="tok-p">(</span><span class="tok-n">GL_LIGHT0</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-n">GL_AMBIENT</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-n">cor_luz0_amb</span><span class="tok-p">);</span>
-<span class="tok-w">    </span><span class="tok-p">}</span><span class="tok-w"> </span><span class="tok-k">else</span><span class="tok-w"> </span><span class="tok-p">{</span>
-<span class="tok-w">        </span><span class="tok-n">mat_b_difusa</span><span class="tok-p">[</span><span class="tok-mi">3</span><span class="tok-p">]</span><span class="tok-w"> </span><span class="tok-o">+=</span><span class="tok-w"> </span><span class="tok-n">dx</span><span class="tok-w"> </span><span class="tok-o">*</span><span class="tok-w"> </span><span class="tok-mf">0.01f</span><span class="tok-p">;</span>
-<span class="tok-w">        </span><span class="tok-n">mat_b_especular</span><span class="tok-p">[</span><span class="tok-mi">3</span><span class="tok-p">]</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-n">mat_b_difusa</span><span class="tok-p">[</span><span class="tok-mi">3</span><span class="tok-p">];</span>
-<span class="tok-w">        </span><span class="tok-k">if</span><span class="tok-w"> </span><span class="tok-p">(</span><span class="tok-n">mat_b_difusa</span><span class="tok-p">[</span><span class="tok-mi">3</span><span class="tok-p">]</span><span class="tok-w"> </span><span class="tok-o">&gt;</span><span class="tok-w"> </span><span class="tok-mf">1.0f</span><span class="tok-p">)</span><span class="tok-w"> </span><span class="tok-n">mat_b_difusa</span><span class="tok-p">[</span><span class="tok-mi">3</span><span class="tok-p">]</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-mf">1.0f</span><span class="tok-p">;</span>
-<span class="tok-w">        </span><span class="tok-k">if</span><span class="tok-w"> </span><span class="tok-p">(</span><span class="tok-n">mat_b_difusa</span><span class="tok-p">[</span><span class="tok-mi">3</span><span class="tok-p">]</span><span class="tok-w"> </span><span class="tok-o">&lt;</span><span class="tok-w"> </span><span class="tok-mf">0.0f</span><span class="tok-p">)</span><span class="tok-w"> </span><span class="tok-n">mat_b_difusa</span><span class="tok-p">[</span><span class="tok-mi">3</span><span class="tok-p">]</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-mf">0.0f</span><span class="tok-p">;</span>
-<span class="tok-w">    </span><span class="tok-p">}</span>
-<span class="tok-w">    </span><span class="tok-n">last_x</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-n">x</span><span class="tok-p">;</span><span class="tok-w"> </span><span class="tok-n">last_y</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-n">y</span><span class="tok-p">;</span>
-<span class="tok-w">    </span><span class="tok-n">glutPostRedisplay</span><span class="tok-p">();</span>
+<span class="tok-w">    </span><span class="tok-n">gluCylinder</span><span class="tok-p">(</span><span class="tok-n">quad</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-mf">0.15</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-mf">0.15</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-mf">0.9</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-mi">12</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-mi">3</span><span class="tok-p">);</span>
+<span class="tok-w">    </span><span class="tok-n">glTranslatef</span><span class="tok-p">(</span><span class="tok-mf">0.0</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-mf">0.0</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-mf">0.9</span><span class="tok-p">);</span>
+<span class="tok-w">    </span><span class="tok-n">glutSolidCone</span><span class="tok-p">(</span><span class="tok-mf">0.15</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-mf">0.6</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-mi">12</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-mi">12</span><span class="tok-p">);</span>
+<span class="tok-w">    </span><span class="tok-n">glPopMatrix</span><span class="tok-p">();</span>
+<span class="tok-w">    </span><span class="tok-n">gluDeleteQuadric</span><span class="tok-p">(</span><span class="tok-n">quad</span><span class="tok-p">);</span>
 <span class="tok-p">}</span>
-<span class="tok-w">    </span><span class="tok-n">glutKeyboardUpFunc</span><span class="tok-p">(</span><span class="tok-n">keyboardUp</span><span class="tok-p">);</span>
-<span class="tok-w">    </span><span class="tok-n">glutMotionFunc</span><span class="tok-p">(</span><span class="tok-n">motion</span><span class="tok-p">);</span></code></pre>
+<span class="tok-p">...</span>
+<span class="tok-kt">void</span><span class="tok-w"> </span><span class="tok-n">compoe_jato</span><span class="tok-p">(</span><span class="tok-kt">void</span><span class="tok-p">){</span>
+<span class="tok-w">  </span><span class="tok-n">desenhaTurbina</span><span class="tok-p">();</span><span class="tok-w"> </span><span class="tok-c1">// Desenha a turbina</span>
+<span class="tok-w">  </span><span class="tok-n">desenhaMissil</span><span class="tok-p">(</span><span class="tok-mf">-1.2</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-mf">-0.3</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-mf">-2.2</span><span class="tok-p">);</span><span class="tok-w"> </span>
+<span class="tok-w">  </span><span class="tok-n">desenhaMissil</span><span class="tok-p">(</span><span class="tok-w"> </span><span class="tok-mf">1.2</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-mf">-0.3</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-mf">-2.2</span><span class="tok-p">);</span>
+<span class="tok-p">...</span>
+<span class="tok-p">}</span>
+<span class="tok-p">...</span></code></pre>
 </div>
 </div>
-<div class="imageblock center">
+<div class="imageblock text-center">
 <div class="content">
-<img src="./imagens/ilum1.png" alt="Esfera A e B com transparência inicial">
+<img src="./imagens/jato1.png" alt="jato1" width="500">
 </div>
+<div class="title">Figura 1. Figura com turbina e mísseis acoplados</div>
 </div>
-<div class="imageblock center">
+<div class="imageblock text-center">
 <div class="content">
-<img src="./imagens/ilum2.png" alt="Transparência e iluminação alteradas com o mouse">
+<img src="./imagens/jato2.png" alt="jato2" width="500">
+</div>
+<div class="title">Figura 2. Figura com outra perspectiva</div>
+</div>
+<hr>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_atividade_2_logotipo_com_textura_rgb">1.2. Atividade 2: Logotipo com textura RGB</h3>
+<div class="paragraph">
+<p>Crie um logotipo utilizando um programa de manipulação de imagens de sua preferência. Salve-o no formato Iris RGB e mapeie-o na parte superior da asa, como mostra a Figura Exemplo de logotipo para o superjato.</p>
+</div>
+<div class="sect3">
+<h4 id="_resposta_2">1.2.1. Resposta</h4>
+<div class="paragraph">
+<p>Aqui eu apenas carregue a textura na calda do superjato.c</p>
+</div>
+<div id="fig_logotipo" class="imageblock">
+<div class="content">
+<img src="./imagens/jato3.png" alt="superjato com logo">
 </div>
 </div>
 <hr>
@@ -638,7 +617,7 @@ pre.pygments .tok-il { color: #666 } /* Literal.Number.Integer.Long */
 <div class="ulist bibliography">
 <ul class="bibliography">
 <li>
-<p>Agostinho Brito Jr. 'Conceitos iniciais' <a href="http://agostinhobritojr.github.io/tutorial/opengl/conceitos.html" class="bare">http://agostinhobritojr.github.io/tutorial/opengl/conceitos.html</a></p>
+<p>Agostinho Brito Jr. 'Modelagem de Sólidos' <a href="https://agostinhobritojr.github.io/tutorial/opengl/modelagem_solidos.html" class="bare">https://agostinhobritojr.github.io/tutorial/opengl/modelagem_solidos.html</a></p>
 </li>
 <li>
 <p>Stephen Prata. 'C++ Primer Plus'. Addison-Wesley. 1990.</p>
@@ -653,7 +632,7 @@ pre.pygments .tok-il { color: #666 } /* Literal.Number.Integer.Long */
 </div>
 <div id="footer">
 <div id="footer-text">
-Última atualização 2025-07-18 07:38:43 -0300
+Última atualização 2025-07-18 23:24:47 -0300
 </div>
 </div>
 <script type="text/x-mathjax-config">
